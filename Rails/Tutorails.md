@@ -108,6 +108,16 @@ class ArticlesController < ApplicationController
 end
 ```
 
+紧接着,我们创建一个资源实体,命令语法还是挺简单易懂的:
+```shell
+rails generate model Article title:string text:text
+```
+
+记下来在数据库中创建相应的表,可以看到基本思想和django是一样的:
+```shell
+rails db:migrate
+```
+
 接下来分别创建增删改查等action
 
 + new，创建资源页面
@@ -150,6 +160,73 @@ class ArticlesController < ApplicationController
   end
  
   def create
+    @article = Article.new(article_params)
+
+    @article.save
+    redirect_to @article
   end
+
+  private 
+    def article_params
+      params.require(:article).permit(:title, :text)
+    end
 end
 ```
+
++ show
+controller:
+```ruby
+def show
+  @article = Article.find(params[:id])
+end
+```
+
+view(path-> /app/views/articles/show.html.erb):
+```ruby
+<p>
+  <strong>Title:</strong>
+  <%= @article.title %>
+</p>
+ 
+<p>
+  <strong>Text:</strong>
+  <%= @article.text %>
+</p>
+```
+
++ index: 列出所有article
+controller:
+```ruby
+def index
+  @articles = Article.all
+end
+```
+
+view(path-> app/views/articles/index.html.erb)
+```ruby
+<h1>Listing articles</h1>
+ 
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Text</th>
+  </tr>
+ 
+  <% @articles.each do |article| %>
+    <tr>
+      <td><%= article.title %></td>
+      <td><%= article.text %></td>
+      <td><%= link_to 'Show', article_path(article) %></td>
+    </tr>
+  <% end %>
+</table>
+```
+
++ Validation
+
+可以在model对象中添加校验规则
+
+
+
+
+
