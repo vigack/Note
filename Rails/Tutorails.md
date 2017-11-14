@@ -110,10 +110,46 @@ end
 
 接下来分别创建增删改查等action
 
-+ new
++ new，创建资源页面
+
+controller:
 ```ruby
 class ArticlesController < ApplicationController
   def new
+  end
+end
+```
+
+view(路径--->app/views/articles/new.html.erb)
+这里最为magic的就是url: articles_path了:
+```ruby
+<%= form_with scope: :article, url: articles_path,local: true do |form| %>
+  <p>
+    <%= form.label :title %><br>
+    <%= form.text_field :title %>
+  </p>
+ 
+  <p>
+    <%= form.label :text %><br>
+    <%= form.text_area :text %>
+  </p>
+ 
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>
+```
+
+articles_path基本上会使得URI匹配articles前缀的接口,而form表单体积默认是以POST形式提交的,参考上面的路由表,可以看出请求会被转发给Articles#create
+
++ create
+继续编写action:
+```ruby
+class ArticlesController < ApplicationController
+  def new
+  end
+ 
+  def create
   end
 end
 ```
